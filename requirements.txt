@@ -1,4 +1,9 @@
-Flask
-pandas
-scikit-learn
-matplotlib
+Flask>=3.0,<4
+
+# Data / ML
+pandas>=2.2,<3
+scikit-learn>=1.5,<2
+
+# Plotting
+matplotlib>=3.9,<4
+seaborn>=0.13,<1
