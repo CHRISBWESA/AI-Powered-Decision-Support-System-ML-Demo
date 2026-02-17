@@ -1,4 +1,5 @@
 Flask>=3.0,<4
+streamlit>=1.40,<2
 
 # Data / ML
 pandas>=2.2,<3

@@ -29,6 +29,14 @@ python app.py
 
 Then open `http://127.0.0.1:5000`.
 
+## Streamlit Cloud (recommended deployment)
+
+Set the Streamlit **Main file path** to `streamlit_app.py`, and run:
+
+```bash
+streamlit run streamlit_app.py
+```
+
 ### If you want auto-reload (dev)
 
 ```bash

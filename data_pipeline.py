@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Tuple
+import os
+from typing import IO, Union
 
 import pandas as pd  # pyright: ignore[reportMissingModuleSource]
 from sklearn.model_selection import train_test_split  # pyright: ignore[reportMissingModuleSource]
@@ -40,7 +41,10 @@ class PreparedData:
     y_reg: pd.Series
 
 
-def prepare_datasets(csv_path: str) -> PreparedData:
+CsvSource = Union[str, "os.PathLike[str]", IO[bytes], IO[str]]
+
+
+def prepare_datasets(csv_source: CsvSource) -> PreparedData:
     """
     Load and prepare a StudentsPerformance-like CSV for:
     - classification (pass_fail)
@@ -48,7 +52,7 @@ def prepare_datasets(csv_path: str) -> PreparedData:
     - clustering (X)
     """
     try:
-        df = pd.read_csv(csv_path)
+        df = pd.read_csv(csv_source)
     except Exception as e:  # pragma: no cover
         raise DatasetError(f"Could not read CSV: {e}") from e
 
