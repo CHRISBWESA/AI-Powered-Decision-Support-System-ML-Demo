@@ -1,14 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for # pyright: ignore[reportMissingImports]
+from flask import Flask, render_template, request, redirect, url_for, session, flash  # pyright: ignore[reportMissingImports]
+from werkzeug.utils import secure_filename  # pyright: ignore[reportMissingModuleSource]
 import os
 import matplotlib.pyplot as plt # pyright: ignore[reportMissingModuleSource]
 import seaborn as sns # pyright: ignore[reportMissingModuleSource]
 import pandas as pd # pyright: ignore[reportMissingModuleSource]
 
-from prepare_data import (
-    X_train_class, X_test_class, y_train_class, y_test_class,
-    X_train_reg, X_test_reg, y_train_reg, y_test_reg,
-    X, y_class, y_reg
-)
+from data_pipeline import prepare_datasets, DatasetError
 
 from sklearn.linear_model import LinearRegression, LogisticRegression # pyright: ignore[reportMissingModuleSource]
 from sklearn.tree import DecisionTreeClassifier # pyright: ignore[reportMissingModuleSource]
@@ -20,8 +17,21 @@ from sklearn.cluster import KMeans, DBSCAN # pyright: ignore[reportMissingModule
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay # pyright: ignore[reportMissingModuleSource]
 
 app = Flask(__name__)
+# Needed for session/flash (used to remember uploaded dataset).
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev-secret-change-me")
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+
+def _get_uploaded_dataset_path() -> str | None:
+    path = session.get("dataset_path")
+    if not path:
+        return None
+    if not os.path.exists(path):
+        session.pop("dataset_path", None)
+        session.pop("dataset_name", None)
+        return None
+    return path
 
 # ---------------- LOGIN ----------------
 @app.route('/', methods=['GET','POST'])
@@ -39,19 +49,39 @@ def login():
 # ---------------- HOME ----------------
 @app.route('/home')
 def home():
-    return render_template('home.html')
+    dataset_name = session.get("dataset_name")
+    return render_template('home.html', dataset_name=dataset_name)
 
 # ---------------- UPLOAD ----------------
 @app.route('/upload', methods=['GET','POST'])
 def upload():
     message = None
     if request.method == 'POST':
-        file = request.files['file']
-        if file and file.filename.endswith('.csv'):
-            file.save(os.path.join(UPLOAD_FOLDER, file.filename))
-            message = f"File '{file.filename}' uploaded successfully!"
-        else:
+        file = request.files.get('file')
+        if not file or not file.filename:
+            message = "No file selected."
+        elif not file.filename.lower().endswith('.csv'):
             message = "Invalid file. Please upload a CSV."
+        else:
+            filename = secure_filename(file.filename)
+            saved_path = os.path.join(UPLOAD_FOLDER, filename)
+            file.save(saved_path)
+
+            # Validate the dataset now so algorithms won't fail later.
+            try:
+                prepare_datasets(saved_path)
+            except DatasetError as e:
+                try:
+                    os.remove(saved_path)
+                except OSError:
+                    pass
+                message = str(e)
+            else:
+                session["dataset_path"] = saved_path
+                session["dataset_name"] = filename
+                flash(f"Dataset '{filename}' uploaded and set for training.", "success")
+                return redirect(url_for("home"))
+
     return render_template('upload.html', message=message)
 
 # ---------------- ALGORITHMS ----------------
@@ -59,6 +89,18 @@ def upload():
 def algorithm(name):
     result = None
     name_lower = name.lower()
+
+    dataset_path = _get_uploaded_dataset_path()
+    if not dataset_path:
+        flash("Please upload a CSV dataset before running any algorithm.", "error")
+        return redirect(url_for("upload"))
+
+    data = prepare_datasets(dataset_path)
+    X_train_class, X_test_class = data.X_train_class, data.X_test_class
+    y_train_class, y_test_class = data.y_train_class, data.y_test_class
+    X_train_reg, X_test_reg = data.X_train_reg, data.X_test_reg
+    y_train_reg, y_test_reg = data.y_train_reg, data.y_test_reg
+    X = data.X
 
     # ---------------- REGRESSION ----------------
     if name_lower == 'linear':

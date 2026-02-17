@@ -3,6 +3,12 @@
 <h1>Welcome to ML Dashboard</h1>
 <p>Select any algorithm below to view results:</p>
 
+{% if dataset_name %}
+<p><strong>Active dataset:</strong> {{ dataset_name }}</p>
+{% else %}
+<p style="color: #b45309;"><strong>No dataset uploaded yet.</strong> Please upload a CSV before running algorithms.</p>
+{% endif %}
+
 <div class="cards">
     <a href="{{ url_for('algorithm', name='linear') }}">Linear Regression</a>
     <a href="{{ url_for('algorithm', name='logistic') }}">Logistic Regression</a>
