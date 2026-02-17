@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Gradient Boosting Regression Result</h2>
+<p>R² Score: {{ result.score if result.score else result }}</p>
+{% if result.plot %}
+<img src="{{ url_for('static', filename='gradient_plot.png') }}" alt="Gradient Boosting Plot">
+{% endif %}
+{% endblock %}

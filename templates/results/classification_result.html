@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Classification Result</h2>
+<p>Accuracy / Score: {{ result.score if result.score else result }}</p>
+
+{% if result.plot %}
+<img src="{{ url_for('static', filename=result.plot) }}" alt="Classification Plot">
+{% endif %}
+{% endblock %}

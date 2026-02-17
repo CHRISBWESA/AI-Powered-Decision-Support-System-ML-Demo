@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Upload CSV Dataset</h2>
+<p>You can upload a CSV file to run algorithms on it.</p>
+
+<form method="POST" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".csv" required><br><br>
+    <input type="submit" value="Upload">
+</form>
+
+{% if message %}
+<p style="color: green;">{{ message }}</p>
+{% endif %}
+{% endblock %}

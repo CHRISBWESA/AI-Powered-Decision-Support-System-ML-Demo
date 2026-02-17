@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>KMeans Clustering Result</h2>
+<p>{{ result }}</p>
+{% if result.plot %}
+<img src="{{ url_for('static', filename='kmeans_plot.png') }}" alt="KMeans Plot">
+{% endif %}
+{% endblock %}

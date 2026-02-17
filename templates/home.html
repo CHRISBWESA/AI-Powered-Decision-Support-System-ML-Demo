@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Welcome to ML Dashboard</h1>
+<p>Select any algorithm below to view results:</p>
+
+<div class="cards">
+    <a href="{{ url_for('algorithm', name='linear') }}">Linear Regression</a>
+    <a href="{{ url_for('algorithm', name='logistic') }}">Logistic Regression</a>
+    <a href="{{ url_for('algorithm', name='decision_tree') }}">Decision Tree</a>
+    <a href="{{ url_for('algorithm', name='random_forest') }}">Random Forest</a>
+    <a href="{{ url_for('algorithm', name='svm') }}">SVM</a>
+    <a href="{{ url_for('algorithm', name='knn') }}">KNN</a>
+    <a href="{{ url_for('algorithm', name='naive_bayes') }}">Naive Bayes</a>
+    <a href="{{ url_for('algorithm', name='gradient_boosting') }}">Gradient Boosting</a>
+    <a href="{{ url_for('algorithm', name='kmeans') }}">KMeans</a>
+    <a href="{{ url_for('algorithm', name='dbscan') }}">DBSCAN</a>
+</div>
+{% endblock %}

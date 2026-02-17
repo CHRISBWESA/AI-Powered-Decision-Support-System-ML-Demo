@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Logistic Regression Result</h2>
+<p>Accuracy: {{ result.score if result.score else result }}</p>
+{% if result.plot %}
+<img src="{{ url_for('static', filename='logistic_plot.png') }}" alt="Logistic Regression Plot">
+{% endif %}
+{% endblock %}

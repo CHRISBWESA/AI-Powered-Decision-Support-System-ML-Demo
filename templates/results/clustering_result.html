@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Clustering Result</h2>
+<p>{{ result }}</p>
+
+{% if result.plot %}
+<img src="{{ url_for('static', filename=result.plot) }}" alt="Clustering Plot">
+{% endif %}
+{% endblock %}

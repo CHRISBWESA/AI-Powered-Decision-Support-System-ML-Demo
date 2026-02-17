@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>DBSCAN Clustering Result</h2>
+<p>{{ result }}</p>
+{% if result.plot %}
+<img src="{{ url_for('static', filename='dbscan_plot.png') }}" alt="DBSCAN Plot">
+{% endif %}
+{% endblock %}
