@@ -28,7 +28,9 @@ y_reg = df_encoded['average_score']    # Regression target
 X_train_class, X_test_class, y_train_class, y_test_class = train_test_split(X, y_class, test_size=0.2, random_state=42)
 X_train_reg, X_test_reg, y_train_reg, y_test_reg = train_test_split(X, y_reg, test_size=0.2, random_state=42)
 
-print("✅ Data is cleaned, encoded, and ready for ML algorithms!")
-print("Features shape:", X.shape)
-print("Classification target shape:", y_class.shape)
-print("Regression target shape:", y_reg.shape)
+if __name__ == "__main__":
+    # Avoid non-ASCII console issues on Windows shells (cp1252).
+    print("Data is cleaned, encoded, and ready for ML algorithms!")
+    print("Features shape:", X.shape)
+    print("Classification target shape:", y_class.shape)
+    print("Regression target shape:", y_reg.shape)

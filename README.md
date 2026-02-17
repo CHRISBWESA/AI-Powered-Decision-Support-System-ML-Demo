@@ -29,6 +29,16 @@ python app.py
 
 Then open `http://127.0.0.1:5000`.
 
+### If you want auto-reload (dev)
+
+```bash
+flask --app app run --debug
+```
+
+### About `ValueError: signal only works in main thread...`
+
+If you see this error, it usually means the app was started from a non-main thread (for example by a runner like Streamlit or inside a notebook). Running with `python app.py` (as above) or using the Flask CLI command avoids the signal-based reloader issue.
+
 ### Login
 
 - Username: `teacher`

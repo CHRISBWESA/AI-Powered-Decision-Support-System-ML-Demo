@@ -169,4 +169,11 @@ def algorithm(name):
     return render_template(f'algorithms/{name_lower}.html', result=result)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # NOTE:
+    # - Werkzeug's reloader uses OS signals, which crash if the app is started
+    #   from a non-main thread (e.g. when executed inside Streamlit/Jupyter).
+    # - For local development with auto-reload, prefer:
+    #     flask --app app run --debug
+    port = int(os.environ.get("PORT", "5000"))
+    debug = os.environ.get("FLASK_DEBUG", "0") == "1"
+    app.run(host="0.0.0.0", port=port, debug=debug, use_reloader=False)
