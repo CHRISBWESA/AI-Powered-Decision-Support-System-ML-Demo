@@ -1,6 +1,6 @@
 # AI-Powered-Decision-Support-System-ML-Demo
 
-Flask web dashboard demo for basic ML algorithms using the `StudentsPerformance.csv` dataset.
+Streamlit web dashboard demo for basic ML algorithms using the `StudentsPerformance.csv` dataset.
 
 ## Setup
 
@@ -21,31 +21,13 @@ Optional dev tools:
 pip install -r requirements-dev.txt
 ```
 
-## Run
-
-```bash
-python app.py
-```
-
-Then open `http://127.0.0.1:5000`.
-
-## Streamlit Cloud (recommended deployment)
-
-Set the Streamlit **Main file path** to `streamlit_app.py`, and run:
+## Run (Streamlit only)
 
 ```bash
 streamlit run streamlit_app.py
 ```
 
-### If you want auto-reload (dev)
-
-```bash
-flask --app app run --debug
-```
-
-### About `ValueError: signal only works in main thread...`
-
-If you see this error, it usually means the app was started from a non-main thread (for example by a runner like Streamlit or inside a notebook). Running with `python app.py` (as above) or using the Flask CLI command avoids the signal-based reloader issue.
+On Streamlit Cloud, set the **Main file path** to `streamlit_app.py`.
 
 ### Login
 
